@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provider Wizard - Recommendations</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <div class="app-container">
+        <!-- Header Image Blur Effect -->
+        <div class="header-image-blur">
+            <img src="assets/header-image.png" alt="" class="blur-image">
+            <div class="blur-overlay"></div>
+        </div>
+            
+            <!-- iOS Status Bar -->
+            <div class="status-bar">
+                <div class="time">9:41</div>
+                <div class="status-icons">
+                    <div class="network-signal">
+                        <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+                            <path d="M2 10L4 8L6 10L10 6L14 10L18 6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="wifi-signal">
+                        <svg width="16" height="14" viewBox="0 0 16 14" fill="none">
+                            <path d="M8 12L10 10M4 8L6 6M12 6L14 8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="battery">
+                        <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+                            <rect x="0" y="2" width="23" height="8" rx="1" stroke="white" stroke-width="1.5"/>
+                            <rect x="24" y="4" width="1" height="4" fill="white"/>
+                            <rect x="2" y="4" width="19" height="4" fill="white"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+            <!-- Tabs -->
+            <div class="tabs">
+                <div 
+                    class="tab" 
+                    :class="{ active: activeTab === 'recommendations' }"
+                    @click="switchTab('recommendations')"
+                >
+                    Recommendations
+                </div>
+                <div 
+                    class="tab" 
+                    :class="{ active: activeTab === 'subscriptions' }"
+                    @click="switchTab('subscriptions')"
+                >
+                    My Subscriptions
+                </div>
+            </div>
+
+                <!-- Recommendations Screen -->
+                <div 
+                    v-if="activeTab === 'recommendations'"
+                    class="screen recommendations-screen"
+                >
+                    <div class="recommendations-container">
+                        <div class="recommendations-wrapper">
+                            <!-- Paramount+ Recommendation -->
+                            <div v-if="isRecommendationVisible('paramount')" class="recommendation-card">
+                                <div class="card-top">
+                                    <div class="provider-logo paramount">
+                                        <img src="assets/paramount-logo.png" alt="Paramount+" @error="handleImageError">
+                                    </div>
+                                    <h2 class="recommendation-title">Out of 500 streaming services, Paramount+ has the most titles from your watchlist</h2>
+                                </div>
+                                
+                                <div class="card-middle">
+                                    <div class="info-box">
+                                        <p class="info-text">There are 5 titles from your watchlist available</p>
+                                        <div class="poster-row">
+                                            <div class="poster"><img src="assets/poster1.png" alt="Poster 1" @error="handleImageError"></div>
+                                            <div class="poster"><img src="assets/poster2.png" alt="Poster 2" @error="handleImageError"></div>
+                                            <div class="poster"><img src="assets/poster3.png" alt="Poster 3" @error="handleImageError"></div>
+                                            <div class="poster"><img src="assets/poster4.png" alt="Poster 4" @error="handleImageError"></div>
+                                            <div class="poster"><img src="assets/poster5.png" alt="Poster 5" @error="handleImageError"></div>
+                                        </div>
+                                    </div>
+                                    <div class="info-box">
+                                        <div class="info-row">
+                                            <div class="icon-container">
+                                                <img src="assets/plus-icon.svg" alt="Plus" class="icon-img">
+                                            </div>
+                                            <p class="info-text">Subscribe for a month and watch all 5 for $12.99</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-bottom">
+                                    <button class="btn-primary" @click="openSignUpPage('paramount')">Subscribe now</button>
+                                    <p class="link-text" @click="addToSubscriptions('paramount')">Already subscribed</p>
+                                </div>
+                            </div>
+
+                            <!-- Hulu Recommendation -->
+                            <div v-if="isRecommendationVisible('hulu')" class="recommendation-card">
+                                <div class="card-top">
+                                    <div class="provider-logo hulu">
+                                        <img src="assets/hulu-logo.png" alt="Hulu" @error="handleImageError">
+                                    </div>
+                                    <h2 class="recommendation-title">Your number of interactions with titles on Peacock has been low.</h2>
+                                </div>
+                                
+                                <div class="card-middle">
+                                    <div class="info-box">
+                                        <div class="info-row">
+                                            <div class="icon-container">
+                                                <img src="assets/arrow-icon.svg" alt="Arrow" class="icon-img">
+                                            </div>
+                                            <p class="info-text">3 interactions in the past 30 days</p>
+                                        </div>
+                                    </div>
+                                    <div class="info-box">
+                                        <div class="info-row">
+                                            <div class="icon-container pause">
+                                                <div class="pause-bar"></div>
+                                                <div class="pause-bar"></div>
+                                            </div>
+                                            <p class="info-text">Pause subscription and save $9.99</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-bottom">
+                                    <button class="btn-primary" @click="openSignUpPage('hulu')">Subscribe now</button>
+                                    <p class="link-text" @click="addToSubscriptions('hulu')">Already subscribed</p>
+                                </div>
+                            </div>
+
+                            <!-- Netflix Recommendation -->
+                            <div v-if="isRecommendationVisible('netflix')" class="recommendation-card">
+                                <div class="card-top">
+                                    <div class="provider-logo netflix">
+                                        <img src="assets/netflix-logo.png" alt="Netflix" @error="handleImageError">
+                                    </div>
+                                    <h2 class="recommendation-title">You had few interactions with titles available on Netflix last month. Consider canceling.</h2>
+                                </div>
+                                
+                                <div class="card-middle">
+                                    <div class="info-box">
+                                        <div class="info-row">
+                                            <div class="icon-container">
+                                                <img src="assets/arrow-icon.svg" alt="Arrow" class="icon-img">
+                                            </div>
+                                            <p class="info-text">3 interactions in the past 30 days</p>
+                                        </div>
+                                    </div>
+                                    <div class="info-box">
+                                        <div class="info-row">
+                                            <div class="icon-container pause">
+                                                <div class="pause-bar"></div>
+                                                <div class="pause-bar"></div>
+                                            </div>
+                                            <p class="info-text">Pause subscription and save $9.99</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-bottom">
+                                    <button class="btn-primary" @click="openSignUpPage('netflix')">Subscribe now</button>
+                                    <p class="link-text" @click="addToSubscriptions('netflix')">Already subscribed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Subscriptions Screen -->
+                <div 
+                    v-if="activeTab === 'subscriptions'"
+                    class="screen subscriptions-screen"
+                >
+                    <div class="subscriptions-container">
+                        <!-- My Subscriptions Section -->
+                        <div class="subscription-section">
+                            <div class="section-header">
+                                <h2 class="section-title">My Subscriptions</h2>
+                                <p class="section-subtitle">Your selected streaming services</p>
+                            </div>
+                            <div class="subscription-list">
+                                <div 
+                                    v-for="subscription in mySubscriptions" 
+                                    :key="subscription.id"
+                                    class="subscription-item"
+                                >
+                                    <div class="subscription-content">
+                                        <div class="subscription-logo">
+                                            <img :src="subscription.logo" :alt="subscription.name" @error="handleImageError">
+                                        </div>
+                                        <div class="subscription-details">
+                                            <p class="subscription-name">{{ subscription.name }}</p>
+                                            <p class="subscription-price">{{ subscription.price }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="subscription-menu-icon" @click="toggleContextMenu">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
+                                            <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
+                                            <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
+                                        </svg>
+                                    </div>
+                                    <div class="context-menu" :class="{ show: showContextMenu }">
+                                        <div class="context-menu-item">Edit</div>
+                                        <div class="context-menu-item">Remove</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detected Subscriptions Section -->
+                        <div class="subscription-section">
+                            <div class="section-header">
+                                <h2 class="section-title">Detected subscriptions</h2>
+                                <p class="section-subtitle">Based on your app usage</p>
+                            </div>
+                            <div class="detected-subscription-list">
+                                <!-- Apple TV+ Card -->
+                                <div class="detected-subscription-item">
+                                    <div class="detected-content">
+                                        <div class="detected-logo">
+                                            <img src="assets/appletv-logo.png" alt="Apple TV+" @error="handleImageError">
+                                        </div>
+                                        <div class="detected-details">
+                                            <p class="detected-name">Apple TV+</p>
+                                            <p class="detected-interactions">9 interactions</p>
+                                        </div>
+                                    </div>
+                                    <div class="detected-menu-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
+                                            <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
+                                            <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Hulu Card -->
+                                <div class="detected-subscription-item">
+                                    <div class="detected-content">
+                                        <div class="detected-logo">
+                                            <img src="assets/disney.webp" alt="Disney +" @error="handleImageError">
+                                        </div>
+                                        <div class="detected-details">
+                                            <p class="detected-name">Hulu</p>
+                                            <p class="detected-interactions">0 interactions</p>
+                                        </div>
+                                    </div>
+                                    <div class="detected-menu-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
+                                            <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
+                                            <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Popup -->
+            <div v-if="showNotification" class="notification-popup">
+                <p class="notification-text">{{ notificationMessage }}</p>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="navbar">
+                <div class="nav-item" :class="{ active: activeNav === 'home' }" @click="activeNav = 'home'">
+                    <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" fill="white"/>
+                    </svg>
+                    <span class="nav-label">Home</span>
+                </div>
+                <div class="nav-item" :class="{ active: activeNav === 'new' }" @click="activeNav = 'new'">
+                    <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="#909398" stroke-width="2"/>
+                        <path d="M12 6V12L16 14" stroke="#909398" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span class="nav-label">New</span>
+                </div>
+                <div class="nav-item" :class="{ active: activeNav === 'popular' }" @click="activeNav = 'popular'">
+                    <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#909398" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="nav-label">Popular</span>
+                </div>
+                <div class="nav-item" :class="{ active: activeNav === 'lists' }" @click="activeNav = 'lists'">
+                    <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M19 21L12 16L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" stroke="#909398" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="nav-label">Lists</span>
+                </div>
+                <div class="nav-item" :class="{ active: activeNav === 'sports' }" @click="activeNav = 'sports'">
+                    <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="#909398" stroke-width="2"/>
+                        <path d="M12 6V8M12 16V18M8 12H6M18 12H16M9 9L10.5 10.5M14.5 13.5L16 15M9 15L10.5 13.5M14.5 10.5L16 9" stroke="#909398" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span class="nav-label">Sports</span>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
