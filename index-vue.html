@@ -43,8 +43,78 @@
                 </div>
             </div>
 
+            <!-- Loading overlay (fake "Optimize" screen) -->
+            <div v-if="showLoadingScreen" class="loading-screen">
+                <div class="loading-screen-bg"></div>
+                <div class="loading-screen-content">
+                    <p class="loading-screen-count">{{ loadingCount }}/{{ loadingTotal }}</p>
+                    <p class="loading-screen-message">We are analyzing all the streaming services in your country</p>
+                </div>
+                <div class="loading-fade-to-black" :class="{ 'is-active': loadingFadeToBlack }" aria-hidden="true"></div>
+            </div>
+
             <!-- Content Area -->
             <div class="content-area">
+                <!-- Home Screen (nav: Home) -->
+                <div v-if="activeNav === 'home'" class="screen home-screen">
+                    <div class="home-container">
+                        <header class="home-header">
+                            <h1 class="home-title">Discover daily</h1>
+                            <div class="home-header-right">
+                                <span class="home-date">JUL 17</span>
+                                <div class="home-badges">
+                                    <span class="home-badge"><img src="assets/netflix-logo.png" alt="" class="home-badge-icon" @error="handleImageError"> 3</span>
+                                    <span class="home-badge"><img src="assets/paramount-logo.png" alt="" class="home-badge-icon" @error="handleImageError"> 3</span>
+                                </div>
+                            </div>
+                        </header>
+                        <button type="button" class="home-optimize-banner" @click="startOptimizeLoading">
+                            <div class="home-optimize-logos">
+                                <img src="assets/netflix-logo.png" alt="" @error="handleImageError">
+                                <img src="assets/paramount-logo.png" alt="" @error="handleImageError">
+                            </div>
+                            <span class="home-optimize-text">Optimize your subscriptions</span>
+                            <span class="home-optimize-arrow">→</span>
+                        </button>
+                        <section class="home-section">
+                            <span class="home-section-tag">JustWatch Editor Pick</span>
+                            <h2 class="home-section-title">Oscar Winners 2024: The complete list</h2>
+                            <p class="home-section-editor">Keith Langston · JustWatch Editor</p>
+                            <button type="button" class="home-follow-btn">Follow list</button>
+                            <div class="home-poster-row">
+                                <div class="home-poster"><img src="assets/poster1.png" alt="" @error="handleImageError"></div>
+                                <div class="home-poster"><img src="assets/poster2.png" alt="" @error="handleImageError"></div>
+                                <div class="home-poster"><img src="assets/poster3.png" alt="" @error="handleImageError"></div>
+                                <div class="home-poster"><img src="assets/poster4.png" alt="" @error="handleImageError"></div>
+                            </div>
+                        </section>
+                        <section class="home-section">
+                            <h2 class="home-section-title">Going viral</h2>
+                            <div class="home-featured-card">
+                                <img src="assets/poster5.png" alt="" class="home-featured-img" @error="handleImageError">
+                                <div class="home-featured-overlay">
+                                    <span class="home-featured-meta">2025 · 71% · 8.4 · 54min</span>
+                                    <h3 class="home-featured-title">A Man in Full</h3>
+                                    <p class="home-featured-subtitle">Season</p>
+                                    <button type="button" class="home-watch-btn">Watch now</button>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="home-section">
+                            <h2 class="home-section-title">Top Drama movies</h2>
+                            <div class="home-poster-row">
+                                <div class="home-poster"><img src="assets/poster6.png" alt="" @error="handleImageError"></div>
+                                <div class="home-poster"><img src="assets/poster1.png" alt="" @error="handleImageError"></div>
+                                <div class="home-poster"><img src="assets/poster2.png" alt="" @error="handleImageError"></div>
+                                <div class="home-poster"><img src="assets/poster3.png" alt="" @error="handleImageError"></div>
+                            </div>
+                        </section>
+                        <p class="experimental-hint">Experimental feature – <a href="#" class="experimental-hint-link" @click.prevent="giveFeedback">Give feedback.</a></p>
+                    </div>
+                </div>
+
+                <!-- Tabs + Recommendations / Subscriptions (nav: New, Popular, Lists, Sports) -->
+                <template v-if="activeNav !== 'home'">
             <!-- Tabs -->
             <div class="tabs">
                 <div 
@@ -69,19 +139,24 @@
                     class="screen recommendations-screen"
                 >
                     <div class="recommendations-container">
-                        <div class="recommendations-wrapper">
+                        <!-- Empty state when no recommendation cards -->
+                        <div v-if="!hasVisibleRecommendations" class="recommendations-empty">
+                            <p class="recommendations-empty-message">New recommendations drop every<br>Thursday. See you then!</p>
+                            <button type="button" class="recommendations-empty-btn" @click="remindMeRecommendations">Remind me</button>
+                        </div>
+                        <div v-else class="recommendations-wrapper">
                             <!-- Paramount+ Recommendation -->
                             <div v-if="isRecommendationVisible('paramount')" class="recommendation-card">
                                 <div class="card-top">
                                     <div class="provider-logo paramount">
                                         <img src="assets/paramount-logo.png" alt="Paramount+" @error="handleImageError">
                                     </div>
-                                    <h2 class="recommendation-title">Out of 500 streaming services, Paramount+ has the most titles from your watchlist</h2>
+                                    <h2 class="recommendation-title">Subscribing to Paramount+ is the best option to stream titles from your watchlist</h2>
                                 </div>
                                 
                                 <div class="card-middle">
                                     <div class="info-box">
-                                        <p class="info-text">There are 5 titles from your watchlist available</p>
+                                        <p class="info-text">Paramount+ streams 5 titles on your watchlist</p>
                                         <div class="poster-row">
                                             <div class="poster"><img src="assets/poster1.png" alt="Poster 1" @error="handleImageError"></div>
                                             <div class="poster"><img src="assets/poster2.png" alt="Poster 2" @error="handleImageError"></div>
@@ -95,14 +170,14 @@
                                             <div class="icon-container">
                                                 <img src="assets/plus-icon.svg" alt="Plus" class="icon-img">
                                             </div>
-                                            <p class="info-text">Subscribe for a month and watch all 5 for $12.99</p>
+                                            <p class="info-text">Subscribe for a month and watch as many titles as you want for $12.99</p>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div class="card-bottom">
                                     <button class="btn-primary" @click="openSignUpPage('paramount')">Subscribe now</button>
-                                    <p class="link-text" @click="addToSubscriptions('paramount')">Already subscribed</p>
+                                    <p class="link-text" @click="addToSubscriptions('paramount')">I'm already subscribed</p>
                                 </div>
                             </div>
 
@@ -112,7 +187,7 @@
                                     <div class="provider-logo hulu">
                                         <img src="assets/hulu-logo.png" alt="Hulu" @error="handleImageError">
                                     </div>
-                                    <h2 class="recommendation-title">Your number of interactions with titles on Peacock has been low.</h2>
+                                    <h2 class="recommendation-title">Your number of interactions with titles on Peacock has been low. Consider canceling.</h2>
                                 </div>
                                 
                                 <div class="card-middle">
@@ -121,7 +196,7 @@
                                             <div class="icon-container">
                                                 <img src="assets/arrow-icon.svg" alt="Arrow" class="icon-img">
                                             </div>
-                                            <p class="info-text">3 interactions in the past 30 days</p>
+                                            <p class="info-text">0 interactions in the past 30 days</p>
                                         </div>
                                     </div>
                                     <div class="info-box">
@@ -136,8 +211,8 @@
                                 </div>
                                 
                                 <div class="card-bottom">
-                                    <button class="btn-primary" @click="openSignUpPage('hulu')">Subscribe now</button>
-                                    <p class="link-text" @click="addToSubscriptions('hulu')">Already subscribed</p>
+                                    <button class="btn-primary" @click="openSignUpPage('hulu')">Pause subscription</button>
+                                    <p class="link-text" @click="removeProviderNotSubscribed('hulu')">I’m not subscribed</p>
                                 </div>
                             </div>
 
@@ -147,7 +222,7 @@
                                     <div class="provider-logo netflix">
                                         <img src="assets/netflix-logo.png" alt="Netflix" @error="handleImageError">
                                     </div>
-                                    <h2 class="recommendation-title">You had few interactions with titles available on Netflix last month. Consider canceling.</h2>
+                                    <h2 class="recommendation-title">You had few interactions with titles available on Netflix last month. Pause subscription?</h2>
                                 </div>
                                 
                                 <div class="card-middle">
@@ -156,7 +231,7 @@
                                             <div class="icon-container">
                                                 <img src="assets/arrow-icon.svg" alt="Arrow" class="icon-img">
                                             </div>
-                                            <p class="info-text">3 interactions in the past 30 days</p>
+                                            <p class="info-text">2 interactions in the past 30 days</p>
                                         </div>
                                     </div>
                                     <div class="info-box">
@@ -165,17 +240,18 @@
                                                 <div class="pause-bar"></div>
                                                 <div class="pause-bar"></div>
                                             </div>
-                                            <p class="info-text">Pause subscription and save $9.99</p>
+                                            <p class="info-text">Pause subscription and save $9.99+</p>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div class="card-bottom">
-                                    <button class="btn-primary" @click="openSignUpPage('netflix')">Subscribe now</button>
-                                    <p class="link-text" @click="addToSubscriptions('netflix')">Already subscribed</p>
+                                    <button class="btn-primary" @click="openSignUpPage('netflix')">Pause subscription</button>
+                                    <p class="link-text" @click="removeProviderNotSubscribed('netflix')">I’m not subscribed</p>
                                 </div>
                             </div>
                         </div>
+                        <p class="experimental-hint">Experimental feature – <a href="#" class="experimental-hint-link" @click.prevent="giveFeedback">Give feedback.</a></p>
                     </div>
                 </div>
 
@@ -185,8 +261,13 @@
                     class="screen subscriptions-screen"
                 >
                     <div class="subscriptions-container">
+                        <!-- Subscriptions empty state -->
+                        <div v-if="!mySubscriptions.length && !detectedSubscriptions.length" class="subscriptions-empty">
+                            <p class="subscriptions-empty-message">No detected subscriptions, keep interacting with titles in the app to see more</p>
+                            <button type="button" class="detected-confirm-btn" @click="activeNav = 'home'">Go to Home</button>
+                        </div>
                         <!-- My Subscriptions Section -->
-                        <div class="subscription-section">
+                        <div v-if="mySubscriptions.length" class="subscription-section">
                             <div class="section-header">
                                 <h2 class="section-title">My Subscriptions</h2>
                                 <p class="section-subtitle">Your selected streaming services</p>
@@ -196,81 +277,79 @@
                                     v-for="subscription in mySubscriptions" 
                                     :key="subscription.id"
                                     class="subscription-item"
+                                    :class="{ 'subscription-removed': isSubscriptionRemoved(subscription.id), 'fade-out': fadingOutSubscriptionIds.includes(subscription.id) }"
                                 >
-                                    <div class="subscription-content">
-                                        <div class="subscription-logo">
-                                            <img :src="subscription.logo" :alt="subscription.name" @error="handleImageError">
+                                    <template v-if="!isSubscriptionRemoved(subscription.id)">
+                                        <div class="subscription-content">
+                                            <div class="subscription-logo">
+                                                <img :src="subscription.logo" :alt="subscription.name" @error="handleImageError">
+                                            </div>
+                                            <div class="subscription-details">
+                                                <p class="subscription-name">{{ subscription.name }}</p>
+                                                <p class="subscription-price">{{ subscription.price }}</p>
+                                            </div>
                                         </div>
-                                        <div class="subscription-details">
-                                            <p class="subscription-name">{{ subscription.name }}</p>
-                                            <p class="subscription-price">{{ subscription.price }}</p>
+                                        <div class="subscription-menu-icon" @click.stop="toggleContextMenu($event, subscription.id)">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
+                                                <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
+                                                <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
+                                            </svg>
                                         </div>
-                                    </div>
-                                    <div class="subscription-menu-icon" @click="toggleContextMenu">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
-                                            <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
-                                            <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
-                                        </svg>
-                                    </div>
-                                    <div class="context-menu" :class="{ show: showContextMenu }">
-                                        <div class="context-menu-item">Edit</div>
-                                        <div class="context-menu-item">Remove</div>
+                                        <div class="context-menu" :class="{ show: contextMenuSubscriptionId === subscription.id }">
+                                            <div class="context-menu-item">Edit</div>
+                                            <div class="context-menu-item" @click="removeSubscription(subscription.id)">Remove</div>
+                                        </div>
+                                    </template>
+                                    <div v-else class="subscription-removed-card">
+                                        <span class="subscription-removed-message">{{ subscription.name }} subscription removed</span>
+                                        <button type="button" class="subscription-undo-btn" @click="undoRemoveSubscription(subscription.id)">Undo</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Detected Subscriptions Section -->
-                        <div class="subscription-section">
+                        <div v-if="detectedSubscriptions.length" class="subscription-section">
                             <div class="section-header">
                                 <h2 class="section-title">Detected subscriptions</h2>
                                 <p class="section-subtitle">Based on your app usage</p>
                             </div>
                             <div class="detected-subscription-list">
-                                <!-- Apple TV+ Card -->
-                                <div class="detected-subscription-item">
-                                    <div class="detected-content">
-                                        <div class="detected-logo">
-                                            <img src="assets/appletv-logo.png" alt="Apple TV+" @error="handleImageError">
+                                <div
+                                    v-for="item in detectedSubscriptions"
+                                    :key="item.id"
+                                    class="detected-subscription-item"
+                                    :class="{ 'marked-not-subscribed': isMarkedNotSubscribed(item.id), 'fade-out': fadingOutDetectedIds.includes(item.id) }"
+                                >
+                                    <!-- Normal state: logo, details, Confirm + Not subscribed -->
+                                    <template v-if="!isMarkedNotSubscribed(item.id)">
+                                        <div class="detected-content">
+                                            <div class="detected-logo">
+                                                <img :src="item.logo" :alt="item.name" @error="handleImageError">
+                                            </div>
+                                            <div class="detected-details">
+                                                <p class="detected-name">{{ item.name }}</p>
+                                                <p class="detected-interactions">{{ item.interactions }}</p>
+                                            </div>
                                         </div>
-                                        <div class="detected-details">
-                                            <p class="detected-name">Apple TV+</p>
-                                            <p class="detected-interactions">9 interactions</p>
+                                        <div class="detected-action-row">
+                                            <button type="button" class="detected-confirm-btn" @click="confirmSubscription(item.id)">Confirm subscription</button>
+                                            <button type="button" class="detected-status-btn" @click="markAsNotSubscribed(item.id)">Not subscribed</button>
                                         </div>
-                                    </div>
-                                    <div class="detected-menu-icon">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
-                                            <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
-                                            <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <!-- Hulu Card -->
-                                <div class="detected-subscription-item">
-                                    <div class="detected-content">
-                                        <div class="detected-logo">
-                                            <img src="assets/disney.webp" alt="Disney +" @error="handleImageError">
-                                        </div>
-                                        <div class="detected-details">
-                                            <p class="detected-name">Hulu</p>
-                                            <p class="detected-interactions">0 interactions</p>
-                                        </div>
-                                    </div>
-                                    <div class="detected-menu-icon">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="6" r="1.5" fill="#D2D3D5"/>
-                                            <circle cx="12" cy="12" r="1.5" fill="#D2D3D5"/>
-                                            <circle cx="12" cy="18" r="1.5" fill="#D2D3D5"/>
-                                        </svg>
+                                    </template>
+                                    <!-- Marked-as-not-subscribed state: message + Undo -->
+                                    <div v-else class="detected-not-subscribed-card">
+                                        <span class="detected-not-subscribed-message">{{ item.name }} marked as not subscribed</span>
+                                        <button type="button" class="detected-undo-btn" @click="undoMarkNotSubscribed(item.id)">Undo</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <p class="experimental-hint">Experimental feature – <a href="#" class="experimental-hint-link" @click.prevent="giveFeedback">Give feedback.</a></p>
                     </div>
                 </div>
+                </template>
             </div>
 
             <!-- Notification Popup -->

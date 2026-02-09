@@ -1,3 +1,4 @@
+/* Reset & base */
 * {
     margin: 0;
     padding: 0;
@@ -29,7 +30,7 @@ body {
     flex-direction: column;
 }
 
-/* Header Image Blur Effect */
+/* Header */
 .header-image-blur {
     position: absolute;
     top: 0;
@@ -117,6 +118,81 @@ body {
     height: 12px;
 }
 
+/* Loading screen (fake "Optimize" overlay) */
+.loading-screen {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-screen-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #060606 0%, #0d0a08 100%);
+}
+
+.loading-screen-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+}
+
+.loading-screen-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+}
+
+.loading-screen-count {
+    font-family: 'Lato', sans-serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.24px;
+    color: white;
+    margin: 0;
+}
+
+.loading-screen-message {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.21px;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin: 0;
+    max-width: 280px;
+}
+
+.loading-fade-to-black {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.loading-fade-to-black.is-active {
+    opacity: 1;
+}
+
 /* Content Area */
 .content-area {
     flex: 1;
@@ -172,7 +248,6 @@ body {
     font-weight: 400;
 }
 
-/* Screen Toggle - Vue v-if handles visibility, we just style when visible */
 .screen {
     display: flex;
     flex: 1;
@@ -182,6 +257,278 @@ body {
     flex-direction: column;
 }
 
+/* Home Screen */
+.home-screen {
+    min-height: 0;
+}
+
+.home-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 24px;
+    scrollbar-width: none;
+}
+
+.home-container::-webkit-scrollbar {
+    display: none;
+}
+
+.home-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.home-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    line-height: 1.2;
+    letter-spacing: 0.24px;
+    color: white;
+    margin: 0;
+}
+
+.home-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-date {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.12);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.home-badges {
+    display: flex;
+    gap: 6px;
+}
+
+.home-badge {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.home-badge-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.home-optimize-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.home-optimize-banner:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.home-optimize-logos {
+    display: flex;
+    align-items: center;
+}
+
+.home-optimize-logos img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    margin-left: -8px;
+}
+
+.home-optimize-logos img:first-child {
+    margin-left: 0;
+}
+
+.home-optimize-text {
+    flex: 1;
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: white;
+}
+
+.home-optimize-arrow {
+    font-size: 18px;
+    color: white;
+}
+
+.home-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.home-section-tag {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #909398;
+    background-color: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 4000px;
+    width: fit-content;
+}
+
+.home-section-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    line-height: 1.3;
+    letter-spacing: 0.24px;
+    color: white;
+    margin: 0;
+}
+
+.home-section-editor {
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #909398;
+    margin: 0;
+}
+
+.home-follow-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: black;
+    background-color: #FBC500;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.home-follow-btn:hover {
+    opacity: 0.9;
+}
+
+.home-poster-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+}
+
+.home-poster-row::-webkit-scrollbar {
+    display: none;
+}
+
+.home-poster {
+    flex-shrink: 0;
+    width: 120px;
+    height: 180px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.home-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.home-featured-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.home-featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.home-featured-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    gap: 6px;
+}
+
+.home-featured-meta {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.home-featured-title {
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin: 0;
+}
+
+.home-featured-subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.home-watch-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.home-watch-btn:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
 /* Recommendations Container */
 .recommendations-container {
     flex: 1;
@@ -189,6 +536,11 @@ body {
     overflow-x: hidden;
     position: relative;
     min-height: 0;
+    scrollbar-width: none;
+}
+
+.recommendations-container::-webkit-scrollbar {
+    display: none;
 }
 
 .recommendations-wrapper {
@@ -196,6 +548,38 @@ body {
     flex-direction: column;
     gap: 16px;
     width: 368px;
+}
+
+/* Recommendations empty state */
+.recommendations-empty {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    position: relative;
+    background-size: 100% 100%, cover;
+    background-position: center, center;
+}
+
+.recommendations-empty-message {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.21px;
+    color: white;
+    text-align: center;
+    margin: 0 0 24px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.recommendations-empty-btn {
+    position: relative;
+    z-index: 1;
 }
 
 /* Recommendation Card */
@@ -454,6 +838,57 @@ body {
     width: 368px;
     min-height: 0;
     align-items: flex-start;
+    scrollbar-width: none;
+}
+
+.subscriptions-container::-webkit-scrollbar {
+    display: none;
+}
+
+.experimental-hint {
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.18px;
+    color: #909398;
+    margin: 16px 0 0 0;
+    padding: 0;
+    flex-shrink: 0;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.experimental-hint-link {
+    color: #89B1D8;
+    text-decoration: none;
+}
+
+.experimental-hint-link:hover {
+    text-decoration: underline;
+}
+
+.subscriptions-empty {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    width: 100%;
+}
+
+.subscriptions-empty-message {
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.21px;
+    color: white;
+    text-align: center;
+    margin: 0 0 24px 0;
 }
 
 .subscription-section {
@@ -604,44 +1039,99 @@ body {
     color: white;
 }
 
+/* Subscription item – removed state */
+.subscription-item.subscription-removed {
+    background-color: #2D323A;
+    padding: 14px 16px;
+}
+
+.subscription-removed-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+}
+
+.subscription-removed-message {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #BBBBBB;
+    flex: 1;
+    min-width: 0;
+}
+
+.subscription-undo-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #89B1D8;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.subscription-undo-btn:hover {
+    color: #9ec4e8;
+    text-decoration: underline;
+}
+
+.subscription-undo-btn:active {
+    color: #7aa3d0;
+}
+
+.subscription-item.fade-out,
+.detected-subscription-item.fade-out {
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+    pointer-events: none;
+}
+
 .detected-subscription-list {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+/* Detected subscription item */
 .detected-subscription-item {
     background-color: rgba(255, 255, 255, 0.04);
     border-radius: 8px;
     padding: 16px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
+    flex-direction: column;
+    gap: 24px;
+    align-self: stretch;
+    justify-content: center;
 }
 
 .detected-content {
     display: flex;
-    gap: 16px;
+    gap: 8px;
     align-items: center;
     flex: 1;
+    min-width: 0;
 }
 
 .detected-logo {
-    width: 80px;
-    height: 32px;
-    border-radius: 8px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 12px;
     overflow: hidden;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: #1C1C1E;
 }
 
 .detected-logo img {
     width: 100%;
-    height: 32px;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
@@ -650,15 +1140,16 @@ body {
     flex-direction: column;
     gap: 8px;
     justify-content: center;
+    min-width: 0;
 }
 
 .detected-name {
     font-family: 'Lato', sans-serif;
     font-size: 16px;
-    font-weight: 900;
-    line-height: 16px;
+    font-weight: 700;
+    line-height: 1.25;
     letter-spacing: 0.24px;
-    color: white;
+    color: #FFFFFF;
     white-space: nowrap;
 }
 
@@ -666,45 +1157,109 @@ body {
     font-family: 'Lato', sans-serif;
     font-size: 14px;
     font-weight: 400;
-    line-height: 24px;
+    line-height: 1.4;
     letter-spacing: 0.21px;
-    color: #909398;
+    color: #D2D3D5;
     white-space: nowrap;
 }
 
-.detected-menu-icon {
-    width: 24px;
-    height: 24px;
+.detected-action-row {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.detected-confirm-btn,
+.recommendations-empty-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #FFFFFF;
+    background-color: #353A42;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    min-height: 40px;
     cursor: pointer;
     flex-shrink: 0;
 }
 
-/* Scrollbar Styling */
-.recommendations-container::-webkit-scrollbar,
-.subscriptions-container::-webkit-scrollbar {
-    width: 4px;
+.detected-confirm-btn:hover,
+.recommendations-empty-btn:hover {
+    background-color: #54585F;
 }
 
-.recommendations-container::-webkit-scrollbar-track,
-.subscriptions-container::-webkit-scrollbar-track {
-    background: transparent;
+.detected-confirm-btn:active,
+.recommendations-empty-btn:active {
+    background-color: #54585F;
 }
 
-.recommendations-container::-webkit-scrollbar-thumb,
-.subscriptions-container::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
+.detected-status-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #8E8E93;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
 }
 
-.recommendations-container::-webkit-scrollbar-thumb:hover,
-.subscriptions-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+.detected-status-btn:hover {
+    color: rgba(255, 255, 255, 0.85);
 }
 
-/* Notification Popup */
+.detected-subscription-item.marked-not-subscribed {
+    background-color: #2D323A;
+    padding: 14px 16px;
+}
+
+.detected-not-subscribed-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+}
+
+.detected-not-subscribed-message {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #BBBBBB;
+    flex: 1;
+    min-width: 0;
+}
+
+.detected-undo-btn {
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #89B1D8;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.detected-undo-btn:hover {
+    color: #9ec4e8;
+    text-decoration: underline;
+}
+
+.detected-undo-btn:active {
+    color: #7aa3d0;
+}
+
+/* Scrollbars */
+
+/* Notification */
 .notification-popup {
     position: fixed;
     bottom: 100px;
