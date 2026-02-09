@@ -214,6 +214,7 @@ body {
 /* Tabs */
 .tabs {
     display: flex;
+    justify-content: center;
     gap: 8px;
     height: 40px;
     position: relative;
